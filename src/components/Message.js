@@ -3,7 +3,6 @@ import { Card, CardContent, Typography } from "@material-ui/core";
 import "./Message.css";
 
 const Message = forwardRef(({ username, data }, ref) => {
-  // console.log("by", props.data);
   const isUser = username === data.username;
   return (
     <div ref={ref} className={`message ${isUser && "message__user"}`}>

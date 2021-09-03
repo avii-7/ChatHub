@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-// TODO: Replace the following with your app's Firebase project configuration
+
 const firebaseConfig = {
   apiKey: "AIzaSyAPXHnZMULe3LGHnHDdSHiXELjHk_tUsFE",
   authDomain: "chathub-avii.firebaseapp.com",

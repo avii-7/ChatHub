@@ -65,7 +65,7 @@ function App() {
         timestamp: serverTimestamp(),
       });
     } catch (error) {
-      console.log("Error Adding Data");
+      console.log("Error Adding Data.");
     }
   };
 

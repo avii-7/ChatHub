@@ -12,8 +12,11 @@
 .message__userCard {
   background-color: #0b81ff !important;
   color: #fff !important;
+  white-space: pre;
 }
 
 .message__guestCard {
   background-color: #e9e9eb !important;
+  white-space: pre;
+  text-align: left;
 }

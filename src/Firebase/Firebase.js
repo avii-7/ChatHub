@@ -7,7 +7,7 @@ const firebaseConfig = {
   projectId: "chathub-avii",
   storageBucket: "chathub-avii.appspot.com",
   messagingSenderId: "121548243057",
-  appId: "1:121548243057:web:bbdbda5c9c354678b61bd0",
+  appId: "1:121548243057:web:bbdbda5c9c354678b61bd0"
 };
 
 initializeApp(firebaseConfig);

@@ -10,13 +10,14 @@
 }
 
 .message__userCard {
-  background-color: #0b81ff !important;
-  color: #fff !important;
+  background-color: #84d35f !important;
+  color: rgb(41, 27, 27) !important;
   white-space: pre;
 }
 
 .message__guestCard {
-  background-color: #e9e9eb !important;
+  background-color: #b0a9da !important;
+  color: #fff !important;
   white-space: pre;
   text-align: left;
 }

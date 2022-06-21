@@ -56,7 +56,7 @@ function App() {
 
   const sendMessages = async (e) => {
     setInput("");
-    e.preventDefault();
+    e?.preventDefault();
     setInput("");
     try {
       await addDoc(collection(db, "conversation"), {
@@ -68,6 +68,18 @@ function App() {
       console.log("Error Adding Data.");
     }
   };
+
+const ShouldSendMessage = async (e) => { 
+  if(e.keyCode == 13 && !e.ctrlKey)
+  {
+    e.preventDefault(); 
+    await sendMessages(null); 
+  }
+  else if (e.keyCode == 13 && e.ctrlKey)
+  {
+    document.getElementById('MyTextArea').value += "\r\n";
+  }
+};
 
   return (
     <div className="App">
@@ -82,7 +94,7 @@ function App() {
       </div>
       <form className="app__form">
         <FormControl className="app__formControl">
-          <TextareaAutosize className="app__input" placeholder="Enter a message..." value={input} onChange={(e) => setInput(e.target.value)} minRows="4"/>
+          <TextareaAutosize className="app__input" id="MyTextArea" placeholder="Enter a message..." value={input} onChange={(e) => setInput(e.target.value)} minRows="4" autoFocus="true" onKeyDown={ShouldSendMessage}/>
           <IconButton className="app__iconButton" disabled={!input} variant="contained" color="primary" type="submit" onClick={sendMessages}>
             <SendIcon />
           </IconButton>

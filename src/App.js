@@ -3,22 +3,17 @@ import db from "./Firebase/Firebase";
 import FlipMove from "react-flip-move";
 import Message from "./components/Message";
 import SendIcon from "@material-ui/icons/Send";
-import { IconButton, TextareaAutosize } from "@material-ui/core";
+import { IconButton, TextareaAutosize, Typography } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
-import { FormControl, Input } from "@material-ui/core";
+import { FormControl } from "@material-ui/core";
 import { collection, addDoc, query, serverTimestamp, onSnapshot, orderBy } from "firebase/firestore";
-import { stringify } from "@firebase/util";
+import { groupBy } from "core-js/actual/array/group-by";
 
 function App() {
   const [input, setInput] = useState("");
   const [username, setUsername] = useState("Unknown");
   const [messages, setMessages] = useState([]);
   const LocalName = "MyName";
-
-  // const getName = () => {
-  //   let uname = prompt("Enter your name ...");
-  //   return uname === "" || uname === null ? "Unknown" : uname.charAt(0).toUpperCase() + uname.toLowerCase().slice(1);
-  // };
 
   const EmptyCheck = (e) => {
     switch (e) {
@@ -36,11 +31,12 @@ function App() {
   useEffect(() => {
     const q = query(collection(db, "conversation"), orderBy("timestamp"));
     onSnapshot(q, (collection) => {
-      const x = collection.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+      const data = collection.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+      const groupedData = data.groupBy(message => { return new Date(message.data.timestamp.seconds * 1000).toLocaleDateString('hi-IN', { year:'2-digit', month: "2-digit", day:"2-digit", timeZone: "Asia/Kolkata"})});
+      setMessages(groupedData);
       
-      setMessages(x);
+      //{Object.keys(groupedData).map((key) => {console.log(key);})}
       window.scrollBy(0, document.body.scrollHeight);
-
     });
 
     var MyName = localStorage.getItem(LocalName) ?? prompt("Enter Your Name");
@@ -57,7 +53,6 @@ function App() {
   const sendMessages = async (e) => {
     setInput("");
     e?.preventDefault();
-    setInput("");
     try {
       await addDoc(collection(db, "conversation"), {
         username: username,
@@ -70,12 +65,12 @@ function App() {
   };
 
 const ShouldSendMessage = async (e) => { 
-  if(e.keyCode == 13 && !e.ctrlKey)
+  if(e.keyCode === 13 && !e.ctrlKey)
   {
     e.preventDefault(); 
     await sendMessages(null); 
   }
-  else if (e.keyCode == 13 && e.ctrlKey)
+  else if (e.keyCode === 13 && e.ctrlKey)
   {
     document.getElementById('MyTextArea').value += "\r\n";
   }
@@ -83,12 +78,21 @@ const ShouldSendMessage = async (e) => {
 
   return (
     <div className="App">
-      <h1 className="app__h1">ChatHub</h1>
-      <h3 className="app__h3">Welcome - {username}</h3>
+      <div className="app__header">
+        <h1 className="app__h1">ChatHub</h1>
+        <h4 className="app__h4">Welcome - {username}</h4>
+      </div>
       <div className="app__msgContainer">
         <FlipMove>
-          {messages.map(({ id, data }) => (
-            <Message key={id} username={username} data={data} />
+          {Object.keys(messages).map((messageKey) => (
+            <div>
+              <Typography className="app__date" align={"center"} variant="h6" color={"black"}>
+              {messageKey}
+              </Typography>
+              {messages[messageKey].map(({ id, data }) => (
+                <Message key={id} username={username} data={data} />
+              ))}
+            </div>
           ))}
         </FlipMove>
       </div>

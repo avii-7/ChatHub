@@ -8,11 +8,17 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "core-js": "^3.32.2",
     "firebase": "^9.0.1",
+    "linkify-html": "^4.1.1",
+    "linkify-it": "^4.0.1",
+    "linkify-react": "^4.1.1",
+    "linkifyjs": "^4.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-flip-move": "^3.0.4",
-    "react-scripts": "4.0.3",
+    "react-link-parser": "^1.1.6",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

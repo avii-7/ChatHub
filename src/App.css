@@ -40,16 +40,32 @@
   padding-bottom: 6em;
 }
 
-.app__h1 {
-  padding: 0.3em 0;
+.app__header{
   position: sticky;
   top: 0;
-  z-index: 1;
   background-color: #e9e9eb;
+  z-index: 1;
+}
+
+.app__h1 {
+  padding: 0.2em 0;
   font-family: "Lobster", cursive;
 }
 
-.app__h3{
-  padding: 1em 0;
+.app__h4{
+  background-color: #e9e9eb;
   letter-spacing: 2px;
+  padding-bottom: 0.8em;
+}
+
+.app__date{
+  letter-spacing: 0.1em !important;
+  font-size: 0.7em !important;
+  padding: 0.7em;
+  position: sticky;
+  top: 90px;
+  background-color: #e9e9eb;
+  display: inline-block;
+  border-radius: 10px;
+  margin-top: 10px !important;
 }

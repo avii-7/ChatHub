@@ -31,11 +31,22 @@ function App() {
   useEffect(() => {
     const q = query(collection(db, "conversation"), orderBy("timestamp"));
     onSnapshot(q, (collection) => {
-      const data = collection.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
-      const groupedData = data.groupBy(message => { return new Date(message.data.timestamp.seconds * 1000).toLocaleDateString('hi-IN', { year:'2-digit', month: "2-digit", day:"2-digit", timeZone: "Asia/Kolkata"})});
+      const docs = collection.docs.map((doc) => {
+        const data = doc.data();
+        return (
+          {
+            id: doc.id, 
+            username: data.username, 
+            message: data.message,
+            sentOn: data.timestamp?.seconds || Math.floor(data.localTimeStamp / 1000)
+          })
+      });
+      
+      const groupedData = docs.groupBy(doc => {
+           return new Date(doc.sentOn * 1000).toLocaleDateString('hi-IN', { year:'2-digit', month: "2-digit", day:"2-digit", timeZone: "Asia/Kolkata"})});
+
       setMessages(groupedData);
       
-      //{Object.keys(groupedData).map((key) => {console.log(key);})}
       window.scrollBy(0, document.body.scrollHeight);
     });
 
@@ -58,6 +69,7 @@ function App() {
         username: username,
         message: input,
         timestamp: serverTimestamp(),
+        localTimeStamp: Date.now()
       });
     } catch (error) {
       console.log("Error Adding Data.");
@@ -85,12 +97,12 @@ const ShouldSendMessage = async (e) => {
       <div className="app__msgContainer">
         <FlipMove>
           {Object.keys(messages).map((messageKey) => (
-            <div>
-              <Typography className="app__date" align={"center"} variant="h6" color={"black"}>
+            <div key={messageKey}>
+              <Typography className="app__date" align={"center"} variant="h6" color={"initial"}>
               {messageKey}
               </Typography>
-              {messages[messageKey].map(({ id, data }) => (
-                <Message key={id} username={username} data={data} />
+              {messages[messageKey].map((message) => (
+                <Message key={message.id} myName={username} username={message.username} message={message.message} sentOn={message.sentOn}/>
               ))}
             </div>
           ))}
@@ -98,7 +110,7 @@ const ShouldSendMessage = async (e) => {
       </div>
       <form className="app__form">
         <FormControl className="app__formControl">
-          <TextareaAutosize className="app__input" id="MyTextArea" placeholder="Enter a message..." value={input} onChange={(e) => setInput(e.target.value)} minRows="4" autoFocus="true" onKeyDown={ShouldSendMessage}/>
+          <TextareaAutosize className="app__input" id="MyTextArea" placeholder="Enter a message..." value={input} onChange={(e) => setInput(e.target.value)} minRows="4" autoFocus={true} onKeyDown={ShouldSendMessage}/>
           <IconButton className="app__iconButton" disabled={!input} variant="contained" color="primary" type="submit" onClick={sendMessages}>
             <SendIcon />
           </IconButton>

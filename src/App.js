@@ -2,10 +2,11 @@ import "./App.css";
 import db from "./Firebase/Firebase";
 import FlipMove from "react-flip-move";
 import Message from "./components/Message";
-import SendIcon from "@material-ui/icons/Send";
-import { IconButton, TextareaAutosize, Typography } from "@material-ui/core";
+import SendIcon from '@mui/icons-material/Send';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { IconButton, TextareaAutosize, Typography, FormControl } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { FormControl } from "@material-ui/core";
 import { collection, addDoc, query, serverTimestamp, onSnapshot, orderBy } from "firebase/firestore";
 import { groupBy } from "core-js/actual/array/group-by";
 
@@ -35,24 +36,24 @@ function App() {
         const data = doc.data();
         return (
           {
-            id: doc.id, 
-            username: data.username, 
+            id: doc.id,
+            username: data.username,
             message: data.message,
             sentOn: data.timestamp?.seconds || Math.floor(data.localTimeStamp / 1000)
           })
       });
-      
+
       const groupedData = docs.groupBy(doc => {
-           return new Date(doc.sentOn * 1000).toLocaleDateString('hi-IN', { year:'2-digit', month: "2-digit", day:"2-digit", timeZone: "Asia/Kolkata"})});
+        return new Date(doc.sentOn * 1000).toLocaleDateString('hi-IN', { year: '2-digit', month: "2-digit", day: "2-digit", timeZone: "Asia/Kolkata" })
+      });
 
       setMessages(groupedData);
-      
+
       window.scrollBy(0, document.body.scrollHeight);
     });
 
     var MyName = localStorage.getItem(LocalName) ?? prompt("Enter Your Name");
-    if(EmptyCheck(MyName))
-    {
+    if (EmptyCheck(MyName)) {
       MyName = "Unknown";
     }
     localStorage.setItem(LocalName, MyName);
@@ -76,17 +77,24 @@ function App() {
     }
   };
 
-const ShouldSendMessage = async (e) => { 
-  if(e.keyCode === 13 && !e.ctrlKey)
-  {
-    e.preventDefault(); 
-    await sendMessages(null); 
+  const triggerSelectPhoto = () => {
+    let inputField = document.getElementById("imageToUpload")
+    inputField.click();
   }
-  else if (e.keyCode === 13 && e.ctrlKey)
-  {
-    document.getElementById('MyTextArea').value += "\r\n";
+
+  const selectPhoto = (e) => {
+    console.log("Photo selected successfully !")
   }
-};
+
+  const ShouldSendMessage = async (e) => {
+    if (e.keyCode === 13 && !e.ctrlKey) {
+      e.preventDefault();
+      await sendMessages(null);
+    }
+    else if (e.keyCode === 13 && e.ctrlKey) {
+      document.getElementById('MyTextArea').value += "\r\n";
+    }
+  };
 
   return (
     <div className="App">
@@ -99,10 +107,10 @@ const ShouldSendMessage = async (e) => {
           {Object.keys(messages).map((messageKey) => (
             <div key={messageKey}>
               <Typography className="app__date" align={"center"} variant="h6" color={"initial"}>
-              {messageKey}
+                {messageKey}
               </Typography>
               {messages[messageKey].map((message) => (
-                <Message key={message.id} myName={username} username={message.username} message={message.message} sentOn={message.sentOn}/>
+                <Message key={message.id} myName={username} username={message.username} message={message.message} sentOn={message.sentOn} />
               ))}
             </div>
           ))}
@@ -110,10 +118,15 @@ const ShouldSendMessage = async (e) => {
       </div>
       <form className="app__form">
         <FormControl className="app__formControl">
-          <TextareaAutosize className="app__input" id="MyTextArea" placeholder="Enter a message..." value={input} onChange={(e) => setInput(e.target.value)} minRows="4" autoFocus={true} onKeyDown={ShouldSendMessage}/>
+          <TextareaAutosize className="app__input" id="MyTextArea" placeholder="Enter a message..." value={input} onChange={(e) => setInput(e.target.value)} minRows="4" autoFocus={true} onKeyDown={ShouldSendMessage} />
+
           <IconButton className="app__iconButton" disabled={!input} variant="contained" color="primary" type="submit" onClick={sendMessages}>
             <SendIcon />
           </IconButton>
+          <IconButton className="app__iconButton" variant="contained" color="primary" onClick={triggerSelectPhoto}>
+            <InsertPhotoIcon />
+          </IconButton>
+          <input type="file" id="imageToUpload" name="imageToUpload" accept="image/*" hidden onChange={selectPhoto}/>
         </FormControl>
       </form>
     </div>
